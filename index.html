@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>fun life hub</title>
+<style>
+body{
+margin:0;
+overflow:hidden;
+background:#050505;
+font-family:arial;
+}
+#u{
+position:absolute;
+top:20px;
+left:20px;
+color:#fff;
+z-index:5;
+width:320px;
+backdrop-filter:blur(8px);
+background:rgba(255,255,255,.08);
+padding:18px;
+border-radius:18px;
+border:1px solid rgba(255,255,255,.15);
+}
+#u h1{
+margin:0 0 10px;
+font-size:30px;
+}
+#u p{
+line-height:1.5;
+font-size:14px;
+opacity:.9;
+}
+#b{
+margin-top:12px;
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+}
+button{
+background:#fff;
+color:#000;
+border:none;
+padding:10px 14px;
+border-radius:999px;
+cursor:pointer;
+font-size:12px;
+text-transform:lowercase;
+}
+#i{
+position:absolute;
+bottom:20px;
+right:20px;
+color:#fff;
+z-index:5;
+background:rgba(255,255,255,.08);
+padding:12px;
+border-radius:14px;
+font-size:13px;
+backdrop-filter:blur(8px);
+}
+canvas{
+display:block;
+}
+</style>
+</head>
+<body>
+<div id="u">
+<h1>fun life hub</h1>
+<p>lif can be more fun with music, art, games and random tiny momments that make pepole smile every day.</p>
+<p>explorre the glowing world, spin cool shaps, watch stars move and enjoy the craazy happy vibez all arond you.</p>
+<div id="b">
+<button id="a">spin mod</button>
+<button id="c">dark sky</button>
+<button id="d">crazy zoom</button>
+<button id="e">move shaps</button>
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/three@0.164/build/three.min.js"></script>
+<script>
+let s=new THREE.Scene()
+let c=new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,.1,1000)
+let r=new THREE.WebGLRenderer({antialias:true})
+r.setSize(window.innerWidth,window.innerHeight)
+document.body.appendChild(r.domElement)
+
+let a=new THREE.AmbientLight(0xffffff,.8)
+s.add(a)
+
+let l=new THREE.PointLight(0xffffff,2)
+l.position.set(5,5,5)
+s.add(l)
+
+let o=new THREE.TextureLoader()
+let tx=o.load('https://threejs.org/examples/textures/brick_diffuse.jpg')
+
+let g1=new THREE.BoxGeometry(3,3,3)
+let m1=new THREE.MeshStandardMaterial({map:tx})
+let q=new THREE.Mesh(g1,m1)
+q.position.x=-5
+s.add(q)
+
+let g2=new THREE.SphereGeometry(2,32,32)
+let m2=new THREE.MeshStandardMaterial({color:0xff00ff})
+let w=new THREE.Mesh(g2,m2)
+s.add(w)
+
+let g3=new THREE.TorusKnotGeometry(1.5,.5,100,16)
+let m3=new THREE.MeshStandardMaterial({color:0x00ffff})
+let e=new THREE.Mesh(g3,m3)
+e.position.x=5
+s.add(e)
+
+let g4=new THREE.ConeGeometry(2,4,32)
+let m4=new THREE.MeshStandardMaterial({color:0xffff00})
+let y=new THREE.Mesh(g4,m4)
+y.position.set(0,-4,0)
+s.add(y)
+
+let st=new THREE.BufferGeometry()
+let ar=[]
+for(let i=0;i<1000;i++){
+ar.push((Math.random()-.5)*100)
+ar.push((Math.random()-.5)*100)
+ar.push((Math.random()-.5)*100)
+}
+st.setAttribute('position',new THREE.Float32BufferAttribute(ar,3))
+let sm=new THREE.PointsMaterial({color:0xffffff,size:.2})
+let sp=new THREE.Points(st,sm)
+s.add(sp)
+
+c.position.z=12
+
+let f=0
+let mv=0
+let z=12
+let bg=0
+
+document.getElementById('a').onclick=()=>{
+f=!f
+}
+
+document.getElementById('c').onclick=()=>{
+bg=!bg
+s.background=new THREE.Color(bg?0x220022:0x000000)
+}
+
+document.getElementById('d').onclick=()=>{
+z=z===12?7:12
+}
+
+document.getElementById('e').onclick=()=>{
+mv=!mv
+}
+
+window.addEventListener('resize',()=>{
+c.aspect=window.innerWidth/window.innerHeight
+c.updateProjectionMatrix()
+r.setSize(window.innerWidth,window.innerHeight)
+})
+
+function n(){
+requestAnimationFrame(n)
+
+c.position.z+=(z-c.position.z)*.05
+
+q.rotation.x+=.01
+q.rotation.y+=.01
+
+w.rotation.y+=.01
+
+if(f){
+e.rotation.x+=.08
+e.rotation.y+=.08
+}else{
+e.rotation.x+=.01
+e.rotation.y+=.01
+}
+
+if(mv){
+q.position.y=Math.sin(Date.now()*.002)*2
+w.position.y=Math.cos(Date.now()*.002)*2
+e.position.y=Math.sin(Date.now()*.003)*2
+}
+
+y.rotation.y+=.02
+sp.rotation.y+=.0008
+
+r.render(s,c)
+}
+
+n()
+</script>
+</body>
+</html>
